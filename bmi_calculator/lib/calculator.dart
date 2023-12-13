@@ -49,7 +49,7 @@ class _BMICalculatorState extends State<BMICalculator> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "BMI Calculator",
+                "Scale Smart",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue.shade800,
@@ -91,7 +91,10 @@ class _BMICalculatorState extends State<BMICalculator> {
     );
   }
 
-  Widget buildInputField({required TextEditingController controller, required String hint, required IconData icon}) {
+  Widget buildInputField(
+      {required TextEditingController controller,
+      required String hint,
+      required IconData icon}) {
     return TextField(
       controller: controller,
       keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -123,7 +126,8 @@ class BMIResultBox extends StatelessWidget {
       ),
       child: Text(
         "BMI: $result",
-        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+        style: TextStyle(
+            fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
