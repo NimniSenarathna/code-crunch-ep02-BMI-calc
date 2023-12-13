@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'calculator.dart';
 
 void main()=>runApp(new MyApp());
 
@@ -13,6 +14,7 @@ Widget build(BuildContext context) {
 		brightness: Brightness.light,
 		primaryColor: Colors.blue
 	),
+	home: BMICalculator(),
 	);
 }
 }
