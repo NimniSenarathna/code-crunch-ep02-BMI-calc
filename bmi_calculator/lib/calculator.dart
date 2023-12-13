@@ -1,239 +1,163 @@
-import 'package:bmi_calculator/main.dart';
 import 'package:flutter/material.dart';
 
 class BMICalculator extends StatefulWidget {
-const BMICalculator({Key? key}) : super(key: key);
+  const BMICalculator({Key? key}) : super(key: key);
 
-@override
-_BMICalculatorState createState() => _BMICalculatorState();
+  @override
+  _BMICalculatorState createState() => _BMICalculatorState();
 }
 
 class _BMICalculatorState extends State<BMICalculator> {
+  Color myColor = Colors.grey.shade300;
+  TextEditingController weightController = TextEditingController();
+  TextEditingController heightController = TextEditingController();
+  var mainResult = TextEditingController();
 
-Color myColor = Colors.transparent;
-TextEditingController weight_Controller = new TextEditingController();
-TextEditingController height_Controller = new TextEditingController();
-var main_result = TextEditingController();
+  void calculateBMI(String weight, String height) {
+    var myDoubleWeight = double.parse(weight);
+    var myDoubleHeight = double.parse(height);
+    var res = myDoubleWeight / (myDoubleHeight * myDoubleHeight);
 
-CalCulate_BMI (String weight,String height) async{
-	var myDouble_weight = double.parse(weight);
-	assert(myDouble_weight is double);
-	var myDouble_height = double.parse(height);
-	assert(myDouble_height is double);
+    setState(() {
+      mainResult.text = res.toStringAsFixed(2);
+      if (res < 18.5) {
+        myColor = Color(0xFF87B1D9);
+      } else if (res >= 18.5 && res <= 24.9) {
+        myColor = Color(0xFF3DD365);
+      } else if (res >= 25 && res <= 29.9) {
+        myColor = Color(0xFFEEE133);
+      } else if (res >= 30 && res <= 34.9) {
+        myColor = Color(0xFFFD802E);
+      } else if (res >= 35) {
+        myColor = Color(0xFFF95353);
+      }
+    });
+  }
 
-	var res = (myDouble_weight/(myDouble_height*myDouble_height));
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('BMI Calculator'),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                "BMI Calculator",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue.shade800,
+                  fontSize: 24,
+                ),
+              ),
+              SizedBox(height: 20),
+              buildInputField(
+                controller: weightController,
+                hint: "Enter your weight (kg)",
+                icon: Icons.monitor_weight,
+              ),
+              SizedBox(height: 20),
+              buildInputField(
+                controller: heightController,
+                hint: "Enter your height (m)",
+                icon: Icons.height,
+              ),
+              SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () {
+                  calculateBMI(weightController.text, heightController.text);
+                },
+                child: Text("Calculate"),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blue,
+                  padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                  textStyle: TextStyle(fontSize: 18),
+                ),
+              ),
+              SizedBox(height: 40),
+              BMIResultBox(color: myColor, result: mainResult.text),
+              SizedBox(height: 20),
+              BMIResultLegend(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-	setState(() {
-	main_result.text = res.toStringAsFixed(2);
-	if(res<18.5){
-		myColor = Color(0xFF87B1D9);
-	}
-	else if(res>=18.5 && res<=24.9){
-		myColor = Color(0xFF3DD365);
-	}
-	else if(res>=25 && res<=29.9){
-		myColor = Color(0xFFEEE133);
-	}
-	else if(res>=30 && res<=34.9){
-		myColor = Color(0xFFFD802E);
-	}
-	else if(res>=35){
-		myColor = Color(0xFFF95353);
-	}
-	});
-
+  Widget buildInputField({required TextEditingController controller, required String hint, required IconData icon}) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon),
+        hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
 }
 
-@override
-Widget build(BuildContext context) {
+class BMIResultBox extends StatelessWidget {
+  final Color color;
+  final String result;
 
-	double width = MediaQuery.of(context).size.width;
-	double height = MediaQuery.of(context).size.height;
+  const BMIResultBox({Key? key, required this.color, required this.result})
+      : super(key: key);
 
-	return Scaffold(
-	body: SingleChildScrollView(
-		child: Center(
-		child: Container(
-			height: height,
-			decoration: BoxDecoration(
-				gradient: LinearGradient(
-					colors: [
-					const Color(0xFF6DD5ED),
-					const Color(0xFF2193B0)
-					]
-				)
-			),
-			child: Center(
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.center,
-				children: [
-				SizedBox(
-					height: 100,
-				),
-				Text("BMI Calculator",style: TextStyle(fontWeight: FontWeight.bold,color: Color(0xFF0038FF),fontSize: 25),),
-				SizedBox(
-					height: 30,
-				),
-				Padding(padding: const EdgeInsets.only(left: 15,right: 15,top: 10),
-					child: TextField(
-					controller: weight_Controller,
-					keyboardType: TextInputType.numberWithOptions(decimal: true),
-					style: TextStyle(fontSize: 18,color: Colors.black),
-					decoration: InputDecoration(
-						filled: true,
-						fillColor: Colors.white,
-						hintText: "Enter your weight (kg)",
-					),
-					),),
-				Padding(padding: const EdgeInsets.only(left: 15,right: 15,top: 15),
-					child: TextField(
-					controller: height_Controller,
-					autofocus: false,
-					keyboardType: TextInputType.numberWithOptions(decimal: true),
-					style: TextStyle(fontSize: 18,color: Colors.black),
-					decoration: InputDecoration(
-						filled: true,
-						fillColor: Colors.white,
-						hintText: "Enter your height (m)",
-					),
-					),),
-				Padding(
-					padding: EdgeInsets.only(top: 50),
-					child: Center(
-					child: SizedBox(
-						width: 180,
-						height: 50,
-						child: ElevatedButton(
-						onPressed: (){
-							CalCulate_BMI(weight_Controller.text, height_Controller.text);
-						},
-						child: Text("Calculate",style: TextStyle(fontSize: 18,fontWeight: FontWeight.bold,color: Colors.white),),
-						style: ButtonStyle(
-							backgroundColor: MaterialStateProperty.all(Color(0xFF0038FF)),
-							shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-								RoundedRectangleBorder(
-									borderRadius: BorderRadius.circular(15.0),
-								)
-							)
-						),
-						),
-					),
-					),
-				),
-				SizedBox(
-					height: 80,
-				),
-				Center(
-					child: Container(
-					width: 300,
-					height: 100,
-					decoration: BoxDecoration(
-						color: myColor,
-						borderRadius: BorderRadius.all(Radius.circular(12))
-					),
-					child: Center(child: Text("BMI: "+main_result.text,style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.white),)),
-					),
-				),
-				SizedBox(
-					height: 80,
-				),
-				Center(child: Row(
-					mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-					children: [
-					Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-						Container(
-							height: 50,
-							width: 50,
-							decoration: BoxDecoration(
-								color: Color(0xFF87B1D9),
-								border: Border.all(
-								color: Colors.black,
-								),
-								borderRadius: BorderRadius.all(Radius.circular(12))
-							),
-						),
-						Text("Underweight",style: TextStyle(fontSize: 15),)
-						],
-					),
-					Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-						Container(
-							height: 50,
-							width: 50,
-							decoration: BoxDecoration(
-								color: Color(0xFF3DD365),
-								border: Border.all(
-								color: Colors.black,
-								),
-								borderRadius: BorderRadius.all(Radius.circular(12))
-							),
-						),
-						Text("Normal",style: TextStyle(fontSize: 15),)
-						],
-					),
-					Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-						Container(
-							height: 50,
-							width: 50,
-							decoration: BoxDecoration(
-								color: Color(0xFFEEE133),
-								border: Border.all(
-								color: Colors.black,
-								),
-								borderRadius: BorderRadius.all(Radius.circular(12))
-							),
-						),
-						Text("Overweight",style: TextStyle(fontSize: 15),)
-						],
-					),
-					Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-						Container(
-							height: 50,
-							width: 50,
-							decoration: BoxDecoration(
-								color: Color(0xFFFD802E),
-								border: Border.all(
-								color: Colors.black,
-								),
-								borderRadius: BorderRadius.all(Radius.circular(12))
-							),
-						),
-						Text("obese",style: TextStyle(fontSize: 15),)
-						],
-					),
-					Column(
-						mainAxisAlignment: MainAxisAlignment.center,
-						children: [
-						Container(
-							height: 50,
-							width: 50,
-							decoration: BoxDecoration(
-								color: Color(0xFFF95353),
-								border: Border.all(
-								color: Colors.black,
-								),
-								borderRadius: BorderRadius.all(Radius.circular(12))
-							),
-						),
-						Text("Extreme",style: TextStyle(fontSize: 15),)
-						],
-					)
-					],
-				),)
-
-				],
-			),
-			),
-		),
-		),
-	),
-	);
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        "BMI: $result",
+        style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    );
+  }
 }
+
+class BMIResultLegend extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildLegendItem('Underweight', Color(0xFF87B1D9)),
+        _buildLegendItem('Normal', Color(0xFF3DD365)),
+        _buildLegendItem('Overweight', Color(0xFFEEE133)),
+        _buildLegendItem('Obese', Color(0xFFFD802E)),
+        _buildLegendItem('Extreme', Color(0xFFF95353)),
+      ],
+    );
+  }
+
+  Widget _buildLegendItem(String text, Color color) {
+    return Column(
+      children: [
+        Container(
+          height: 20,
+          width: 20,
+          decoration: BoxDecoration(
+            color: color,
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+        SizedBox(height: 4),
+        Text(text, style: TextStyle(fontSize: 12)),
+      ],
+    );
+  }
 }
