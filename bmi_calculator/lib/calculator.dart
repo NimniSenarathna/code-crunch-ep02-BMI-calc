@@ -38,7 +38,7 @@ class _BMICalculatorState extends State<BMICalculator> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('BMI Calculator'),
+        title: Text('Scale Smart'),
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
       ),
@@ -49,7 +49,7 @@ class _BMICalculatorState extends State<BMICalculator> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Scale Smart",
+                "BMI Calculator",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.blue.shade800,
